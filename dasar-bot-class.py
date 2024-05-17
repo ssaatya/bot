@@ -3,6 +3,8 @@
 
 import discord
 import random
+import os
+import requests
 from discord.ext import commands
 from bot_logic import gen_pass
 
@@ -72,6 +74,83 @@ async def dice(ctx):
 async def joined(ctx, member: discord.Member):
     """Says when a member joined."""
     await ctx.send(f'{member.name} joined {discord.utils.format_dt(member.joined_at)}')
+
+# overwriting kalimat.txt
+@bot.command()
+async def tulis(ctx, *, my_string: str):
+    with open('kalimat.txt', 'w', encoding='utf-8') as t:
+        text = ""
+        text += my_string
+        t.write(text)
+# append kalimat.txt
+@bot.command()
+async def tambahkan(ctx, *, my_string: str):
+    with open('kalimat.txt', 'a', encoding='utf-8') as t:
+        text = "\n"
+        text += my_string
+        t.write(text)
+# reading kalimat.txt
+@bot.command()
+async def baca(ctx):
+    with open('kalimat.txt', 'r', encoding='utf-8') as t:
+        document = t.read()
+        await ctx.send(document)
+
+# random local meme image
+
+@bot.command()
+
+async def meme(ctx):
+
+    img_name = random.choice(os.listdir('meme'))
+
+    with open(f'meme/{img_name}', 'rb') as f:
+
+    # with open(f'meme/enemies-meme.jpg', 'rb') as f:
+
+        # Mari simpan file perpustakaan/library Discord yang dikonversi dalam variabel ini!
+
+        picture = discord.File(f)
+
+    await ctx.send(file=picture)
+
+@bot.command()
+
+async def memehewan(ctx):
+
+    img_name = random.choice(os.listdir('meme hewan'))
+
+    with open(f'meme hewan/{img_name}', 'rb') as f:
+
+    # with open(f'meme hewan/enemies-meme hewan.jpg', 'rb') as f:
+
+        # Mari simpan file perpustakaan/library Discord yang dikonversi dalam variabel ini!
+
+        picture = discord.File(f)
+
+    await ctx.send(file=picture)
+
+# API to get random dog and duck image 
+def get_dog_image_url():
+    url = 'https://random.dog/woof.json'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+@bot.command('dog')
+async def dog(ctx):
+    '''Setiap kali permintaan dog (anjing) dipanggil, program memanggil fungsi get_dog_image_url'''
+    image_url = get_dog_image_url()
+    await ctx.send(image_url)
+def get_duck_image_url():
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+@bot.command('duck')
+async def duck(ctx):
+    '''Setiap kali permintaan duck (bebek) dipanggil, program memanggil fungsi get_duck_image_url'''
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
 
 bot.run('')
 
